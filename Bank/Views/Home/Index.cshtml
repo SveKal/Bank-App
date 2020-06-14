@@ -1,0 +1,28 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model Bank.ViewModels.HomeViewModel
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@{
+    ViewData["Home"] = "Home";
+}
+
+    <div class="text-center">
+        <h1>Welcome to Nackademin Bank</h1>
+        <br/><br />
+        <h4>We serve</h4> 
+        <h4 class="text-dark">@Html.ViewData.Model.AmountCustomers customers</h4><br /> 
+        <h4>with a total of</h4> 
+        <h4 class="text-dark">@Html.ViewData.Model.AmountAccounts accounts</h4><br /> 
+        <h4>accumulating assets of</h4> 
+        <h4 class="text-dark">@Html.ViewData.Model.SumAccounts Sek</h4> <br />
+
+        @if (SignInManager.IsSignedIn(User))
+        {
+            
+        }
+        else
+        {
+            <a asp-area="Identity" asp-page="/Account/Login"  class="btn btn-lg btn-dark">Login</a>
+        }
+
+    </div>

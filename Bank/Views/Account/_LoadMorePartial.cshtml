@@ -1,0 +1,47 @@
+﻿@model AccountDetailsViewModel
+@{
+    ViewData["Account"] = "Account";
+    Layout = "";
+}
+<div class="card">
+    <div class="card-header bg-dark text-light">
+        <h3>
+            Transactions for Account Nr. @Html.ViewData.Model.AccountId<br/>
+        </h3>
+        <a asp-action="Deposit" asp-controller="Transaction" asp-route-id="@Html.ViewData.Model.AccountId" class="text-light">New Deposit</a><br/>
+        <a asp-action="Withdrawal" asp-controller="Transaction" asp-route-id="@Html.ViewData.Model.AccountId" class="text-light">New Withdrawal</a><br/>
+        <a asp-action="Transfer" asp-controller="Transaction" asp-route-id="@Html.ViewData.Model.AccountId" class="text-light">New Transfer</a>
+    </div>
+    <div class="card-body bg-light" id="load">
+        <div class="row">
+            <h5 class="card-title col-2">ID</h5>
+            <h5 class="card-title col-2">Date</h5>
+            <h5 class="card-title col-1 text-right">Type</h5>
+            <h5 class="card-title col-3 text-right">Operation</h5>
+            <h5 class="card-title col-2 text-right">Amount</h5>
+            <h5 class="card-title col-2 text-right">Balance</h5>
+        </div>
+        @foreach (var transaction in Model.Transactions)
+        {
+    <div class="row">
+        <p class="card-text col-2">@transaction.TransactionId</p>
+        <p class="card-text col-2">@transaction.Date.ToShortDateString()</p>
+        <p class="card-text col-1 text-right">@transaction.Type</p>
+        <p class="card-text col-3 text-right">@transaction.Operation</p>
+        <p class="card-text col-2 text-right">@transaction.Amount Sek</p>
+        <p class="card-text col-2 text-right">@transaction.Balance Sek</p>
+    </div>
+        }
+    </div>
+    <a asp-controller="Account"
+       asp-action="LoadMore"
+       asp-route-id="@Model.AccountId"
+       asp-route-page="@(Model.PageNow + 1)"
+       data-ajax="true"
+       data-ajax-method="get"
+       data-ajax-mode="replace"
+       data-ajax-update="#load" class="btn btn-dark btn-block">
+        Load 20 more
+    </a>
+</div>
+<br/>

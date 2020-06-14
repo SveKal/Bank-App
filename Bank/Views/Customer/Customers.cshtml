@@ -1,0 +1,73 @@
+﻿@model Bank.Common.Paging.PaginatedList<Customers>
+@{
+    ViewData["Customers"] = "Customers";
+}
+    
+<div class="section">
+    <!-- container -->
+    <div class="container">
+        <form asp-action="Customers" asp-controller="Customer" method="get" class="form-inline">
+            <div class="text-center">
+                <div class="input-group mb-3 ">
+                    <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" class="form-control shadow-none" placeholder="Find by Name or City" />
+                    <div class="input-group-append">
+                        <button class="btn bg-dark text-light mr-sm-2"><i class="fa fa-search fa-fw"></i></button> | <a asp-action="Customers" asp-controller="Customer" class="text-dark">All Customers</a>
+                    </div>
+                    
+                </div>
+                
+            </div>
+            
+        </form>
+        <!-- row -->
+        <div class="row">
+
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">Customer ID</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Address</th>
+                    <th scope="col">City</th>
+                    <th scope="col">National ID</th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var customer in Model)
+                {
+                    <tr>
+                        <th scope="row">@customer.CustomerId</th>
+                        <td>@customer.Givenname @customer.Surname</td>
+                        <td>@customer.Streetaddress</td>
+                        <td>@customer.City</td>
+                        <td>@customer.NationalId</td>
+                        <td><a asp-action="CustomerDetails" asp-route-id="@customer.CustomerId" class="text-dark">Details</a></td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+        @{
+            var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+            var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+        }
+
+        <a asp-action="Customers"
+           asp-route-sortOrder="@ViewData["CurrentSort"]"
+           asp-route-pageNumber="@(Model.PageIndex - 1)"
+           asp-route-currentFilter="@ViewData["CurrentFilter"]"
+           class="btn btn-dark @prevDisabled">
+            &#8592;
+        </a>
+
+        <a asp-action="Customers"
+           asp-route-sortOrder="@ViewData["CurrentSort"]"
+           asp-route-pageNumber="@(Model.PageIndex + 1)"
+           asp-route-currentFilter="@ViewData["CurrentFilter"]"
+           class="btn btn-dark float-right @nextDisabled">
+            &#8594;
+        </a>
+        <br/><br/>
+    </div>
+</div>

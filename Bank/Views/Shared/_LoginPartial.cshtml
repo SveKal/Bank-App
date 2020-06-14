@@ -1,0 +1,54 @@
+﻿@using Microsoft.AspNetCore.Identity
+
+
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+
+@if (SignInManager.IsSignedIn(User))
+{
+    @if (User.IsInRole("Cashier"))
+    {
+    <div class="navbar-nav">
+        <form asp-action="CustomersById" asp-controller="Customer" method="get" class="form-inline justify-content-center">
+            <div class="text-center">
+                <div class="input-group mb-3 mx-auto">
+                    <input type="number" name="searchString" value="@ViewData["CurrentFilter"]" class="form-control shadow-none" placeholder="Find by Customer ID"/>
+                    <div class="input-group-append">
+                        <button class="btn bg-light text-dark mr-sm-2"><i class="fa fa-search fa-fw"></i></button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    }
+    <ul class="navbar-nav ml-auto">
+        @if (User.IsInRole("Admin"))
+        {
+            <li class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                <a class="nav-link text-light" id="register" asp-area="Identity" asp-page="/Account/Register">Register new user</a>
+            </li>
+        }
+
+        @if (User.IsInRole("Cashier"))
+        {
+            <li class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                <a class="nav-link text-light" id="register" asp-action="Customers" asp-controller="Customer">Customers</a>
+            </li>
+        }
+
+        <li class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse float-right">
+            <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new {area = ""})">
+                <button id="logout" type="submit" class="nav-link btn btn-link text-light">Logout</button>
+            </form>
+        </li>
+    </ul>
+}
+else
+{
+    <ul class="navbar-nav ml-auto">
+        <li class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+            <a class="nav-link text-light" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
+        </li>
+    </ul>
+}

@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Bank</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="~/lib/font-awesome/css/all.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <link asp-append-version="true" type="text/css" rel="stylesheet" href="~/css/site.css" />
+    
+</head>
+<body>
+    <header class="jumbotron bg-light text-dark">
+
+        <div class="row justify-content-md-center">
+
+            <div class="col-md-auto my-auto text-center">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img src="~/images/logo/logo2.svg" width="100" height="100" />
+                </a>
+            </div>
+            <div class="col-md-auto my-auto text-center">
+                <h1 class="display-3">
+                    Nackademin Bank
+                </h1>
+            </div>
+        </div>
+
+        <!-- Macroaxis Widget Start -->
+        <script src="https://www.macroaxis.com/widgets/url.jsp?t=42"></script>
+        <div class="macroaxis-copyright bg-light"></div><!-- Macroaxis Widget End -->
+        <div>
+            <nav class="navbar navbar-expand-md navbar-dark bg-dark sticky-top">
+                <div class="navbar-collapse collapse">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Contact">Contact</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <partial name="_LoginPartial" />
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+
+    <footer class="border-top footer text-muted bg-dark ">
+        <div class="container text-center text-light ">
+            &copy; 2020 - Nackademin Bank - Tomtebodavägen 3a - 171 65 Solna
+        </div>
+    </footer>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+@RenderSection("Scripts", false)
+</body>
+</html>

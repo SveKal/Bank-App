@@ -1,0 +1,50 @@
+﻿@model CustomerListViewModel
+@{
+    ViewData["Customers"] = "Customers";
+}
+
+<div class="card-deck">
+    <div class="card">
+        <div class="card-header bg-dark text-light">
+            <h3>
+                @Html.ViewData.Model.Customer.CustomerId @Html.ViewData.Model.Customer.Givenname @Html.ViewData.Model.Customer.Surname<br />
+                @if (Html.ViewData.Model.Customer.NationalId.Length != 0)
+                {@Html.ViewData.Model.Customer.NationalId
+            }
+            else
+            {<br />}
+            </h3>
+        </div>
+
+        <div class="card-body bg-light">
+            <h5 class="card-title">@Html.ViewData.Model.Customer.Birthday.Value.ToString("dd.MM.yyyy")</h5>
+            <p class="card-text">@Html.ViewData.Model.Customer.Streetaddress</p>
+            <p class="card-text">@Html.ViewData.Model.Customer.Zipcode @Html.ViewData.Model.Customer.City</p>
+            <p class="card-text">@Html.ViewData.Model.Customer.Country</p>
+            <p class="card-text">+(@Html.ViewData.Model.Customer.Telephonecountrycode) @Html.ViewData.Model.Customer.Telephonenumber</p>
+            <p class="card-text">@Html.ViewData.Model.Customer.Gender</p>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header bg-dark text-light">
+            <h3>
+                Accounts <br />
+                Total: @Html.ViewData.Model.TotalBalance Sek
+            </h3>
+        </div>
+        <div class="card-body bg-light">
+            @foreach (var account in Model.Accounts)
+            {
+                <a asp-action="AccountDetails" asp-controller="Account" asp-route-id="@account.AccountId" class="text-dark">
+                    <div class="row">
+                        <p class="card-title col">@account.AccountId</p>
+                        <p class="card-title col text-right">@account.Balance Sek</p>
+                    </div>
+                </a>
+            }
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
