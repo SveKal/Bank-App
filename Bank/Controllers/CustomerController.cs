@@ -12,11 +12,11 @@ namespace Bank.Controllers
 {
     public class CustomerController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILogger<CustomerController> _logger;
         private readonly BankAppDataContext _context;
         private readonly ICustomerRepository _customerRepository;
 
-        public CustomerController(ILogger<HomeController> logger, BankAppDataContext context, ICustomerRepository cust)
+        public CustomerController(ILogger<CustomerController> logger, BankAppDataContext context, ICustomerRepository cust)
         {
             _logger = logger;
             _context = context;
@@ -70,7 +70,7 @@ namespace Bank.Controllers
                 .Select(s => s.Account)
                 .ToList();
 
-            var model = new CustomerListViewModel
+            var model = new CustomerDetailsViewModel
             {
                 Customer = customer,
                 Accounts = accounts

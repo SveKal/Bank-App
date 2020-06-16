@@ -36,6 +36,8 @@ namespace Bank
             services.AddResponseCaching();
             services.AddRazorPages();
             services.AddTransient<ICustomerRepository, CustomerRepository>();
+            services.AddTransient<IAccountRepository, AccountRepository>();
+            services.AddTransient<ITransactionRepository, TransactionRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

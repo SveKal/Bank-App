@@ -6,7 +6,7 @@ using Bank.Models;
 
 namespace Bank.ViewModels
 {
-    public class CustomerListViewModel
+    public class CustomerDetailsViewModel
     {
         public Customers Customer { get; set; }
         public ICollection<Accounts> Accounts { get; set; }

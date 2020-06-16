@@ -11,12 +11,12 @@ namespace Bank.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILogger<AccountController> _logger;
         private readonly BankAppDataContext _context;
         private readonly ICustomerRepository _customerRepository;
         private readonly int Twenty = 20;
 
-        public AccountController(ILogger<HomeController> logger, BankAppDataContext context)
+        public AccountController(ILogger<AccountController> logger, BankAppDataContext context)
         {
             _logger = logger;
             _context = context;
@@ -29,6 +29,7 @@ namespace Bank.Controllers
             var transactions = _context.Transactions
                     .Where(d => d.AccountId == id)
                     .OrderByDescending(d => d.Date)
+                    .ThenByDescending(d => d.TransactionId)
                     .ToList();
 
                 

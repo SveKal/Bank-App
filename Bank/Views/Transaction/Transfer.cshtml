@@ -1,8 +1,39 @@
-﻿
-
+﻿@model TransactionViewModel
 @{
-    ViewBag.Title = "title";
-    Layout = "_Layout";
+    ViewData["Transaction"] = "Transfer";
 }
+<div class="row justify-content-md-center">
+    <div class="card" style="width: 50%;">
+        <div class="card-header bg-dark text-light">
+            <h3>
+                Transfer from Account @Model.AccountId
+            </h3>
+        </div>
+        <div class="card-body bg-light">
+            <form asp-action="Transfer" method="post" enctype="multipart/form-data">
+                <input type="hidden" asp-for="AccountId" />
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Amount" class="col-form-label"></label>
+                    <input asp-for="Amount" class="form-control shadow-none" />
+                    <span asp-validation-for="Amount" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ToAccountId" class="col-form-label"></label>
+                    <input asp-for="ToAccountId" class="form-control shadow-none" />
+                    <span asp-validation-for="ToAccountId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-dark" />
+                </div>
+            </form>
+            <div>
+                <a asp-action="AccountDetails" asp-controller="Account" asp-route-id="@Model.AccountId" class="text-dark">Back to List</a>
+            </div>
+        </div>
+    </div>
+</div>
 
-<h2>title</h2>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
