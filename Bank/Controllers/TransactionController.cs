@@ -5,11 +5,13 @@ using System.Threading.Tasks;
 using Bank.Models;
 using Bank.Repositories.Interfaces;
 using Bank.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace Bank.Controllers
 {
+    [Authorize(Roles = "Cashier, Admin")]
     public class TransactionController : Controller
     {
         private readonly BankAppDataContext _context;

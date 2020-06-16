@@ -8,11 +8,14 @@
         <div class="card-header bg-dark text-light">
             <h3>
                 @Html.ViewData.Model.Customer.CustomerId @Html.ViewData.Model.Customer.Givenname @Html.ViewData.Model.Customer.Surname<br />
-                @if (Html.ViewData.Model.Customer.NationalId.Length != 0)
-                {@Html.ViewData.Model.Customer.NationalId
-            }
-            else
-            {<br />}
+                @if (Html.ViewData.Model.Customer.NationalId.Length == 0)
+                {
+                    <br/>
+                }
+                else
+                {
+                    @Html.ViewData.Model.Customer.NationalId
+                }
             </h3>
         </div>
 
@@ -23,6 +26,7 @@
             <p class="card-text">@Html.ViewData.Model.Customer.Country</p>
             <p class="card-text">+(@Html.ViewData.Model.Customer.Telephonecountrycode) @Html.ViewData.Model.Customer.Telephonenumber</p>
             <p class="card-text">@Html.ViewData.Model.Customer.Gender</p>
+            <a asp-action="EditCustomer" asp-controller="Customer" asp-route-id="@Model.Customer.CustomerId"class="btn btn-dark text-light">Edit</a>
         </div>
     </div>
     <div class="card">

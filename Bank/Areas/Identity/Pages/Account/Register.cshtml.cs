@@ -16,7 +16,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Bank.Areas.Identity.Pages.Account
 {
-    [AllowAnonymous]
+    [Authorize(Roles = "Cashier, Admin")]
     public class RegisterModel : PageModel
     {
         private readonly SignInManager<IdentityUser> _signInManager;

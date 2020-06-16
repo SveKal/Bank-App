@@ -1,15 +1,18 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Bank.Common.Paging;
 using Bank.Models;
 using Bank.Repositories.Interfaces;
 using Bank.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Bank.Controllers
 {
+    [Authorize(Roles = "Cashier, Admin")]
     public class CustomerController : Controller
     {
         private readonly ILogger<CustomerController> _logger;
@@ -78,5 +81,65 @@ namespace Bank.Controllers
 
             return View(model);
         }
+
+        public IActionResult CreateCustomer()
+        {
+            var viewModel = new CustomerViewModel();
+            return View(viewModel);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult CreateCustomer(CustomerViewModel viewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                if (!_customerRepository.CustomerExistsByNationalId(viewModel.NationalId))
+                {
+                    _customerRepository.CreateCustomer(viewModel);
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Customer with this National ID already exists.");
+                    return View("CreateCustomer", viewModel);
+                }
+                return RedirectToAction("Customers");
+            }
+            return View("CreateCustomer", viewModel);
+        }
+        public IActionResult EditCustomer(int id)
+        {
+            var customer = _customerRepository.GetCustomerById(id);
+            var viewModel = new CustomerViewModel()
+            {
+                CustomerId = customer.CustomerId,
+                Gender = customer.Gender,
+                Givenname = customer.Givenname,
+                Surname = customer.Surname,
+                Streetaddress = customer.Streetaddress,
+                City = customer.City,
+                Zipcode = customer.Zipcode,
+                Country = customer.Country,
+                CountryCode = customer.CountryCode,
+                Birthday = customer.Birthday,
+                NationalId = customer.NationalId,
+                Telephonecountrycode = customer.Telephonecountrycode,
+                Telephonenumber = customer.Telephonenumber,
+                Emailaddress = customer.Emailaddress
+            };
+            return View("EditCustomer", viewModel);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult EditCustomer(CustomerViewModel viewModel)
+        {
+            if (ModelState.IsValid)
+            {
+               _customerRepository.EditCustomer(viewModel);
+                return RedirectToAction("Customers");
+            }
+
+            return View("EditCustomer", viewModel);
+        }
+
     }
 }

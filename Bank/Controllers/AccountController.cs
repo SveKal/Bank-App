@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Bank.Controllers
 {
+    [Authorize(Roles = "Cashier, Admin")]
     public class AccountController : Controller
     {
         private readonly ILogger<AccountController> _logger;

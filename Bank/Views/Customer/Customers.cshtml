@@ -13,28 +13,25 @@
                     <div class="input-group-append">
                         <button class="btn bg-dark text-light mr-sm-2"><i class="fa fa-search fa-fw"></i></button> | <a asp-action="Customers" asp-controller="Customer" class="text-dark">All Customers</a>
                     </div>
-                    
                 </div>
-                
             </div>
-            
         </form>
-        <!-- row -->
+        <a asp-action="CreateCustomer" asp-controller="Customer" class="btn btn-dark text-light">Create New Customer</a><br />
         <div class="row">
-
             <table class="table">
                 <thead>
-                <tr>
-                    <th scope="col">Customer ID</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Address</th>
-                    <th scope="col">City</th>
-                    <th scope="col">National ID</th>
-                    <th scope="col"></th>
-                </tr>
+                    <tr>
+                        <th scope="col">Customer ID</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Address</th>
+                        <th scope="col">City</th>
+                        <th scope="col">National ID</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                    </tr>
                 </thead>
                 <tbody>
-                @foreach (var customer in Model)
+                    @foreach (var customer in Model)
                 {
                     <tr>
                         <th scope="row">@customer.CustomerId</th>
@@ -43,6 +40,7 @@
                         <td>@customer.City</td>
                         <td>@customer.NationalId</td>
                         <td><a asp-action="CustomerDetails" asp-route-id="@customer.CustomerId" class="text-dark">Details</a></td>
+                        <td><a asp-action="EditCustomer" asp-route-id="@customer.CustomerId" class="text-dark">Edit</a></td>
                     </tr>
                 }
                 </tbody>
@@ -68,6 +66,6 @@
            class="btn btn-dark float-right @nextDisabled">
             &#8594;
         </a>
-        <br/><br/>
+        <br /><br />
     </div>
 </div>
