@@ -18,7 +18,6 @@ namespace BankUnitTests
     public class TransactionUnitTest
     {
         private readonly BankAppDataContext _context;
-        private readonly ICustomerRepository _customerRepository;
         private readonly ITransactionRepository _transactionRepository;
         private readonly TransactionController _transactionController;
 
@@ -66,8 +65,8 @@ namespace BankUnitTests
             controller.ModelState.AddModelError(String.Empty, "Amount can not be lower than 1 or higher than 50000. For higher transactions please contact the bank.");
             var result = controller.Deposit(vm);
 
-            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-            Assert.IsType<SerializableError>(badRequestResult.Value);
+            var badRequestResult = Assert.IsType<ViewResult>(result);
+            Assert.IsType<ViewResult>(badRequestResult);
         }
         [Fact]
         public void Can_Not_Withdraw_Negative_Amount()
@@ -78,8 +77,8 @@ namespace BankUnitTests
             controller.ModelState.AddModelError(String.Empty, "Amount can not be lower than 1 or higher than 50000. For higher transactions please contact the bank.");
             var result = controller.Withdrawal(vm);
 
-            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-            Assert.IsType<SerializableError>(badRequestResult.Value);
+            var badRequestResult = Assert.IsType<ViewResult>(result);
+            Assert.IsType<ViewResult>(badRequestResult);
         }
 
         [Fact]

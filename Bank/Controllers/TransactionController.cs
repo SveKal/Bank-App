@@ -67,7 +67,7 @@ namespace Bank.Controllers
                 _transactionRepository.Deposit(viewModel, transaction, account);
                 return RedirectToAction("AccountDetails", "Account", new {id = account.AccountId, page = 1});
             }
-            return BadRequest(ModelState);
+            return View("Deposit", viewModel);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -89,7 +89,7 @@ namespace Bank.Controllers
                 }
                 
             }
-            return BadRequest(ModelState);
+            return View("Withdrawal", viewModel);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -125,7 +125,7 @@ namespace Bank.Controllers
                     ModelState.AddModelError(string.Empty, "Account does not exist.");
                 }
             }
-            return BadRequest(ModelState);
+            return View("Transfer", viewModel);
         }
     }
 }
