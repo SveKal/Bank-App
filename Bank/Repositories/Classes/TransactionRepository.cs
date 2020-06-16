@@ -43,6 +43,7 @@ namespace Bank.Repositories.Classes
             }
             return true;
         }
+
         public bool SameAccount(int accountId, int toAccountId)
         {
             if (accountId == toAccountId)
@@ -51,10 +52,59 @@ namespace Bank.Repositories.Classes
             }
             return true;
         }
-        public void CreateTransaction(Transactions transaction)
+        public bool Deposit(TransactionViewModel viewModel, Transactions transaction, Accounts account)
         {
+            account.Balance += viewModel.Amount;
+            Update(account);
+            viewModel.Type = "Credit";
+            CreateTransaction(viewModel, transaction, account);
+            return true;
+        }
+        
+        public bool Withdrawal(TransactionViewModel viewModel, Transactions transaction, Accounts account)
+        {
+            if (HasCoverage(viewModel.Balance, viewModel.Amount))
+            {
+                account.Balance -= viewModel.Amount;
+                Update(account);
+                viewModel.Amount = -viewModel.Amount;
+                viewModel.Type = "Debit";
+                CreateTransaction(viewModel, transaction, account);
+                return true;
+            }
+            return false;
+        }
+        public bool CreateTransaction(TransactionViewModel viewModel, Transactions transaction, Accounts account)
+        {
+            transaction.AccountId = viewModel.AccountId;
+            transaction.Date = DateTime.Now;
+            transaction.Type = viewModel.Type;
+            transaction.Operation = viewModel.Operation;
+            transaction.Amount = viewModel.Amount;
+            transaction.Balance = account.Balance;
             _context.Transactions.Add(transaction);
             _context.SaveChanges();
+            return true;
+        }
+        public bool Transfer(TransactionViewModel viewModel, Accounts fromAccount, Accounts toAccount, Transactions fromTransaction, Transactions toTransaction)
+        {
+            if (HasCoverage(fromAccount.Balance, viewModel.Amount))
+            {
+                var newVm = new TransactionViewModel();
+                viewModel.Operation = "Transfer to other Bank";
+                Withdrawal(viewModel, fromTransaction, fromAccount);
+                newVm.AccountId = toAccount.AccountId;
+                newVm.Operation = "Transfer from other Bank";
+                newVm.Amount = -viewModel.Amount;
+                newVm.Balance = toAccount.Balance;
+                newVm.Date = DateTime.Now;
+                newVm.Bank = viewModel.Bank;
+                newVm.Symbol = viewModel.Symbol;
+                newVm.Type = viewModel.Type;
+                toTransaction.AccountId = toAccount.AccountId;
+                Deposit(newVm, toTransaction, toAccount);
+            }
+            return false;
         }
     }
 }

@@ -20,11 +20,12 @@ namespace Bank.Controllers
             _logger = logger;
             _context = context;
         }
-
+        [ResponseCache(Duration = 30)]
         public IActionResult IndexDefault()
         {
             return View("Index");
         }
+        [ResponseCache(Duration = 30)]
         public IActionResult Index()
         {
             var amountCustomers = _context.Customers.Select(x => x.CustomerId).Distinct().Count();

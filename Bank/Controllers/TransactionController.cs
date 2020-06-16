@@ -12,13 +12,11 @@ namespace Bank.Controllers
 {
     public class TransactionController : Controller
     {
-        private readonly ILogger<TransactionController> _logger;
         private readonly BankAppDataContext _context;
         private readonly ITransactionRepository _transactionRepository;
 
-        public TransactionController(ILogger<TransactionController> logger, BankAppDataContext context, ITransactionRepository transactionRepository)
+        public TransactionController(BankAppDataContext context, ITransactionRepository transactionRepository)
         {
-            _logger = logger;
             _context = context;
             _transactionRepository = transactionRepository;
         }
@@ -65,18 +63,11 @@ namespace Bank.Controllers
             var transaction = new Transactions();
             if (ModelState.IsValid)
             {
-                account.Balance += viewModel.Amount;
-                _transactionRepository.Update(account);
-                transaction.AccountId = viewModel.AccountId;
-                transaction.Date = DateTime.Now;
-                transaction.Type = "Credit";
-                transaction.Operation = "Credit in Cash";
-                transaction.Amount = viewModel.Amount;
-                transaction.Balance = account.Balance;
-                _transactionRepository.CreateTransaction(transaction);
+                viewModel.Operation = "Credit in Cash";
+                _transactionRepository.Deposit(viewModel, transaction, account);
                 return RedirectToAction("AccountDetails", "Account", new {id = account.AccountId, page = 1});
             }
-            return View("Deposit", viewModel);
+            return BadRequest(ModelState);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -88,15 +79,8 @@ namespace Bank.Controllers
             {
                 if (_transactionRepository.HasCoverage(account.Balance, viewModel.Amount))
                 {
-                    account.Balance -= viewModel.Amount;
-                    _transactionRepository.Update(account);
-                    transaction.AccountId = viewModel.AccountId;
-                    transaction.Date = DateTime.Now;
-                    transaction.Type = "Debit";
-                    transaction.Operation = "Debit in Cash";
-                    transaction.Amount = -viewModel.Amount;
-                    transaction.Balance = account.Balance;
-                    _transactionRepository.CreateTransaction(transaction);
+                    viewModel.Operation = "Withdrawal in Cash";
+                    _transactionRepository.Withdrawal(viewModel,transaction, account);
                     return RedirectToAction("AccountDetails", "Account", new { id = account.AccountId, page = 1 });
                 }
                 else
@@ -105,7 +89,7 @@ namespace Bank.Controllers
                 }
                 
             }
-            return View("Withdrawal", viewModel);
+            return BadRequest(ModelState);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -123,29 +107,12 @@ namespace Bank.Controllers
                     {
                         if (_transactionRepository.HasCoverage(fromAccount.Balance, viewModel.Amount))
                         {
-                            fromAccount.Balance -= viewModel.Amount;
-                            toAccount.Balance += viewModel.Amount;
-                            _transactionRepository.Update(fromAccount);
-                            _transactionRepository.Update(toAccount);
-                            fromTransaction.AccountId = viewModel.AccountId;
-                            fromTransaction.Date = DateTime.Now;
-                            fromTransaction.Type = "Debit";
-                            fromTransaction.Operation = "Transfer to other Account";
-                            fromTransaction.Amount = -viewModel.Amount;
-                            fromTransaction.Balance = fromAccount.Balance;
-                            _transactionRepository.CreateTransaction(fromTransaction);
-                            toTransaction.AccountId = viewModel.ToAccountId;
-                            toTransaction.Date = DateTime.Now;
-                            toTransaction.Type = "Credit";
-                            toTransaction.Operation = "Transfer from other Account";
-                            toTransaction.Amount = viewModel.Amount;
-                            toTransaction.Balance = toAccount.Balance;
-                            _transactionRepository.CreateTransaction(toTransaction);
+                            _transactionRepository.Transfer(viewModel, fromAccount, toAccount, fromTransaction, toTransaction);
                             return RedirectToAction("AccountDetails", "Account", new { id = fromAccount.AccountId, page = 1 });
                         }
                         else
                         {
-                            ModelState.AddModelError(string.Empty, "Account has not enough coverage for withdrawal.");
+                            ModelState.AddModelError(string.Empty, "Account has not enough coverage.");
                         }
                     }
                     else
@@ -158,7 +125,7 @@ namespace Bank.Controllers
                     ModelState.AddModelError(string.Empty, "Account does not exist.");
                 }
             }
-            return View("Transfer", viewModel);
+            return BadRequest(ModelState);
         }
     }
 }
